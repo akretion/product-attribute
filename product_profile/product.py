@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp import models, fields, api, _
-from openerp.osv.orm import setup_modifiers
+from openerp.osv import orm
 from openerp.exceptions import Warning
 from lxml import etree
 
@@ -104,41 +104,33 @@ class ProductMixinProfile(models.AbstractModel):
             if self.profile_id:
                 try:
                     self[field] = self.profile_id[field]
-                    print '     prof', field
                 except ValueError as e:
                     raise Warning(format_except_message(e, field, self))
                 except Exception as e:
                     raise Warning("%s" % e)
             elif to_play:
                 defaults.update({field: profile[field]})
-                print '    defaults', field
             else:
                 # also on field initialisation
                 self[field] = False
-                print '     false', field
         return defaults
 
     @api.model
     def _customize_view(self, res, view_type):
-        """ WIP """
         profile_group = self.env.ref('product_profile.group_product_profile')
-        users = [user.id for user in profile_group.users]
-        if view_type == 'form' and self.env.uid not in users:
+        users_in_profile_group = [user.id for user in profile_group.users]
+        if view_type == 'form' and self.env.uid not in users_in_profile_group:
             doc = etree.XML(res['arch'])
             fields = self._fields_to_populate(self.profile_id)
             fields_def = self.fields_get(allfields=fields)
-            print 'fields_def', fields_def
             for field in fields:
-                xml = doc.xpath("//field[@name='%s']" % field)[0]
-                print '     xml', xml.values()
-                xml.attrib['attrs'] = "{'invisible': True}"
-                print '      av modifier', xml.values()
-                setup_modifiers(xml, fields_def[field])
-                print xml.values()
-                print '   modif', xml.attrib['modifiers']
-                print '   attrib', xml.attrib
+                try:
+                    node = doc.xpath("//field[@name='%s']" % field)[0]
+                    node.set('invisible', "[('profile_id', '!=', False)]")
+                    orm.setup_modifiers(node, fields_def[field])
+                except Exception:
+                    pass
             res['arch'] = etree.tostring(doc, pretty_print=True)
-            print res['arch']
         return res
 
 
