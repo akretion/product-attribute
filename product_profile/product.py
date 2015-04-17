@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 ##############################################################################
 #
 #    Author: David BEAL
@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from openerp import models, fields, api
+from openerp import models, fields, api, _
+from openerp.osv.orm import setup_modifiers
 from openerp.exceptions import Warning
 from lxml import etree
 
@@ -29,17 +30,20 @@ from lxml import etree
 PROFILE_FIELDS_TO_EXCLUDE = ['name', 'description', 'sequence',
                              'display_name', '__last_update']
 
+PROFILE_MENU = (_("Sales > Configuration \n> Product Categories and Attributes"
+                  "\n> Product Profiles"))
+
 
 def format_except_message(error, field, self):
     value = self.profile_id[field]
     model = type(self)._name
-    message = ("Issue:\n%s\n'%s' value can't be applied to '%s' field."
-               "\nThere is no matching value between 'Product Profiles' "
-               "\nand '%s' models for this field.\n\nResolution:\n"
-               "Check your settings on Profile model:\n"
-               "Sales > Configuration > Product Categories and Attributes"
-               "> Product Profiles"
-               % (error, value, field, model))
+    message = (_("Issue\n------\n"
+                 "%s\n'%s' value can't be applied to '%s' field."
+                 "\nThere is no matching value between 'Product Profiles' "
+                 "\nand '%s' models for this field.\n\n"
+                 "Resolution\n----------\n"
+                 "Check your settings on Profile model:\n%s"
+               % (error, value, field, model, PROFILE_MENU)))
     return message
 
 
@@ -74,16 +78,8 @@ class ProductProfile(models.Model):
         help="see 'type' field in product.template")
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-
-    profile_id = fields.Many2one(
-        'product.profile',
-        string='Profile')
-    profile_description = fields.Text(
-        related='profile_id.description',
-        string='Profile explanation',
-        readonly=True)
+class ProductMixinProfile(models.AbstractModel):
+    _name = 'product.mixin.profile'
 
     @api.model
     def _fields_to_populate(self, profile):
@@ -123,51 +119,76 @@ class ProductTemplate(models.Model):
         return defaults
 
     @api.model
-    def create(self, vals):
-        if vals.get('profile_id'):
-            defaults = self._onchange_from_profile(vals)
-            vals = dict(defaults, **vals)
-        return super(ProductTemplate, self).create(vals)
-
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form',
-                        toolbar=False, submenu=False):
+    def _customize_view(self, res, view_type):
         """ WIP """
-        res = super(ProductTemplate, self).fields_view_get(
-            view_id=view_id, view_type=view_type, toolbar=toolbar,
-            submenu=submenu)
-        if view_type == 'form':
+        profile_group = self.env.ref('product_profile.group_product_profile')
+        users = [user.id for user in profile_group.users]
+        print self.env.uid, profile_group.users
+        if view_type == 'form' and self.env.uid in users:
             doc = etree.XML(res['arch'])
             fields = self._fields_to_populate(self.profile_id)
+            # fields_to_exclude = PROFILE_FIELDS_TO_EXCLUDE
+            # fields_to_exclude.extend(models.MAGIC_COLUMNS)
+            # aa = [field for field in profile._fields.keys()
+            #       if field not in fields_to_exclude]
+            # import pdb;pdb.set_trace()
+            fields_def = self.fields_get(allfields=fields)
+            # import pdb;pdb.set_trace()
             for field in fields:
+                # ff = self._fields[field]
+                # ff = self._fields[field]._attrs
                 xml = doc.xpath("//field[@name='%s']" % field)[0]
-                attrs = xml.attrib
-                if 'attrs' in attrs:
-                    print ''
-                else:
-                    xml.attrib['attrs'] = '{\'invisible\': True}'
+                # if 'attrs' in attrs:
+                #     print ''
+                # else:
+                xml.attrib['attrs'] = '{\'invisible\': True}'
+                setup_modifiers(xml, fields_def[field])
                     # print xml[0].attrib['modifiers']
             res['arch'] = etree.tostring(doc, pretty_print=True)
             print res['arch']
         return res
 
 
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
+class ProductTemplate(models.Model):
+    _inherit = ['product.template', 'product.mixin.profile']
+    _name = 'product.template'
 
-    @api.onchange('profile_id')
-    def _onchange_from_profile(self, vals=None):
-        """ Update product fields with product.profile corresponding fields
-            WIP
+    profile_id = fields.Many2one(
+        'product.profile',
+        string='Profile')
+    profile_description = fields.Text(
+        related='profile_id.description',
+        string='Profile explanation',
+        readonly=True)
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form',
+                        toolbar=False, submenu=False):
+        """ fields_view_get comes from Model (not AbstractModel)
         """
-        if isinstance(self.id, models.NewId):
-            print 'PROFILE_ID', self.profile_id
-            if self.profile_id:
-                if not isinstance(vals, dict):
-                    vals = {}
-                vals['profile_id'] = self.profile_id.id
-                print '     YES  pppppp'
-                return self.product_tmpl_id._onchange_from_profile(
-                    vals=vals)
-        else:
-            return self.product_tmpl_id._onchange_from_profile(vals=vals)
+        res = super(ProductTemplate, self).fields_view_get(
+            view_id=view_id, view_type=view_type, toolbar=toolbar,
+            submenu=submenu)
+        return self._customize_view(res, view_type)
+
+    @api.model
+    def create(self, vals):
+        if vals.get('profile_id'):
+            defaults = self._onchange_from_profile(vals)
+            vals = dict(defaults, **vals)
+        return super(ProductTemplate, self).create(vals)
+
+
+class ProductProduct(models.Model):
+    _inherit = ['product.product', 'product.mixin.profile']
+    _name = 'product.product'
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form',
+                        toolbar=False, submenu=False):
+        """ fields_view_get comes from Model (not AbstractModel)
+        """
+        res = super(ProductProduct, self).fields_view_get(
+            view_id=view_id, view_type=view_type, toolbar=toolbar,
+            submenu=submenu)
+        return self._customize_view(res, view_type)
