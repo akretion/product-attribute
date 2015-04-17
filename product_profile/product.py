@@ -53,7 +53,7 @@ class ProductProfile(models.Model):
 
     def _get_types(self):
         """ inherit in your custom module.
-            could be this if stock module is installed
+            could be this one if stock module is installed
 
         return [('product', 'Stockable Product'),
                 ('consu', 'Consumable'),
@@ -123,27 +123,20 @@ class ProductMixinProfile(models.AbstractModel):
         """ WIP """
         profile_group = self.env.ref('product_profile.group_product_profile')
         users = [user.id for user in profile_group.users]
-        print self.env.uid, profile_group.users
-        if view_type == 'form' and self.env.uid in users:
+        if view_type == 'form' and self.env.uid not in users:
             doc = etree.XML(res['arch'])
             fields = self._fields_to_populate(self.profile_id)
-            # fields_to_exclude = PROFILE_FIELDS_TO_EXCLUDE
-            # fields_to_exclude.extend(models.MAGIC_COLUMNS)
-            # aa = [field for field in profile._fields.keys()
-            #       if field not in fields_to_exclude]
-            # import pdb;pdb.set_trace()
             fields_def = self.fields_get(allfields=fields)
-            # import pdb;pdb.set_trace()
+            print 'fields_def', fields_def
             for field in fields:
-                # ff = self._fields[field]
-                # ff = self._fields[field]._attrs
                 xml = doc.xpath("//field[@name='%s']" % field)[0]
-                # if 'attrs' in attrs:
-                #     print ''
-                # else:
-                xml.attrib['attrs'] = '{\'invisible\': True}'
+                print '     xml', xml.values()
+                xml.attrib['attrs'] = "{'invisible': True}"
+                print '      av modifier', xml.values()
                 setup_modifiers(xml, fields_def[field])
-                    # print xml[0].attrib['modifiers']
+                print xml.values()
+                print '   modif', xml.attrib['modifiers']
+                print '   attrib', xml.attrib
             res['arch'] = etree.tostring(doc, pretty_print=True)
             print res['arch']
         return res
@@ -186,8 +179,6 @@ class ProductProduct(models.Model):
     @api.model
     def fields_view_get(self, view_id=None, view_type='form',
                         toolbar=False, submenu=False):
-        """ fields_view_get comes from Model (not AbstractModel)
-        """
         res = super(ProductProduct, self).fields_view_get(
             view_id=view_id, view_type=view_type, toolbar=toolbar,
             submenu=submenu)
