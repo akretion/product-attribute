@@ -124,17 +124,14 @@ class ProductMixinProfile(models.AbstractModel):
             fields = self._fields_to_populate(self.profile_id)
             fields_def = self.fields_get(allfields=fields)
             attrs = "{'invisible': [('profile_id', '!=', False)]}"
+            paths = ["//field[@name='%s']",
+                     "//label[@for='%s']"]
             for field in fields:
-                node = doc.xpath("//field[@name='%s']" % field)
-                if node:
-                    node = node[0]
-                    node.set('attrs', attrs)
-                    orm.setup_modifiers(node, fields_def[field])
-                lab_node = doc.xpath("//label[@for='%s']" % field)
-                if lab_node:
-                    lab_node = lab_node[0]
-                    lab_node.set('attrs', attrs)
-                    orm.setup_modifiers(lab_node, fields_def[field])
+                for path in paths:
+                    node = doc.xpath(path % field)
+                    if node:
+                        node[0].set('attrs', attrs)
+                        orm.setup_modifiers(node[0], fields_def[field])
             res['arch'] = etree.tostring(doc, pretty_print=True)
         return res
 
