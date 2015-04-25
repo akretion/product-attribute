@@ -12,3 +12,9 @@
 "any_prof","Weird profile","- Purchasable
 - Display on POS
 - Not Saleable","product",0,1,1,
+"complete_prof","Complete profile","- Stockable product
+- Saleable 
+- Purchasable
+- Available in POS
+- MTO
+- Manufacturable","product",1,1,1,"mrp.route_warehouse0_manufacture,stock.route_warehouse0_mto,purchase.route_warehouse0_buy"
