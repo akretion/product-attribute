@@ -138,8 +138,10 @@ class ProductMixinProfile(models.AbstractModel):
                 for path in paths:
                     node = doc.xpath(path % field)
                     if node:
-                        node[0].set('attrs', attrs)
-                        orm.setup_modifiers(node[0], fields_def[field])
+                        for current_node in node:
+                            current_node.set('attrs', attrs)
+                            orm.setup_modifiers(current_node,
+                                                fields_def[field])
             res['arch'] = etree.tostring(doc, pretty_print=True)
         return res
 
