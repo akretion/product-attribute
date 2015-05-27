@@ -63,8 +63,9 @@ class ProductProfile(models.Model):
     sequence = fields.Integer(
         help="Allows to define the order of the entries of profile_id field\n"
              "(not synchronized with product.template fields)")
-    description = fields.Text(
+    explanation = fields.Text(
         required=True,
+        oldname='description',
         help="Allows to display an explanation on the selected profile\n"
              "(not synchronized with product.template fields)")
     type = fields.Selection(
@@ -80,7 +81,7 @@ class ProductMixinProfile(models.AbstractModel):
     def _get_profile_fields_to_exclude(self):
         # These fields must not be synchronized between product.profile
         # and product.template
-        return ['name', 'description', 'sequence',
+        return ['name', 'explanation', 'sequence',
                 'display_name', '__last_update']
 
     @api.model
@@ -153,9 +154,9 @@ class ProductTemplate(models.Model):
     profile_id = fields.Many2one(
         'product.profile',
         string='Profile')
-    profile_description = fields.Text(
-        related='profile_id.description',
-        string='Profile explanation',
+    profile_explanation = fields.Text(
+        related='profile_id.explanation',
+        string='Profile Explanation',
         readonly=True)
 
     @api.model
