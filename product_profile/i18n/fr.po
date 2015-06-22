@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-04 09:45+0000\n"
-"PO-Revision-Date: 2015-06-04 11:50+0100\n"
+"POT-Creation-Date: 2015-06-22 15:15+0000\n"
+"PO-Revision-Date: 2015-06-22 17:16+0100\n"
 "Last-Translator: David BEAL <david.beal@akretion.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -112,6 +112,7 @@ msgid "Product Template"
 msgstr "Modèle d'article"
 
 #. module: product_profile
+#: view:product.template:product_profile.product_template_search_view
 #: field:product.template,profile_id:0
 msgid "Profile"
 msgstr "Profil"
@@ -139,6 +140,9 @@ msgstr "Type"
 #: help:product.profile,type:0
 msgid "see 'type' field in product.template"
 msgstr "voir le champ 'type' dans les produits modèles"
+
+#~ msgid "Profil"
+#~ msgstr "Profil"
 
 #~ msgid "Description"
 #~ msgstr "Description"
