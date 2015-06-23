@@ -130,12 +130,12 @@ class ProductMixinProfile(models.AbstractModel):
         return [(x.id, x.name) for x in self.env['product.profile'].search([])]
 
     @api.model
-    def _customize_profile_filters(self, profile_filter):
+    def _customize_profile_filters(self, my_filter):
         """ Inherit if you to customize search filter display"""
         return {
-            'string': "%s" % profile_filter[1],
+            'string': "%s" % my_filter[1],
             'help': 'Filtering by Product Profile',
-            'domain': "[('profile_id','=', %s)]" % profile_filter[0]}
+            'domain': "[('profile_id','=', %s)]" % my_filter[0]}
 
     @api.model
     def _customize_view(self, res, view_type):
@@ -164,9 +164,9 @@ class ProductMixinProfile(models.AbstractModel):
             node = doc.xpath("//filter[1]")
             if not node:
                 return res
-            for profile_filter in filters_to_create:
+            for my_filter in filters_to_create:
                 elm = etree.Element(
-                    'filter', **self._customize_profile_filters(profile_filter))
+                    'filter', **self._customize_profile_filters(my_filter))
                 node[0].addprevious(elm)
             res['arch'] = etree.tostring(doc, pretty_print=True)
         return res
