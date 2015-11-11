@@ -21,7 +21,7 @@
 
 from openerp import models, fields, api, _
 from openerp.osv import orm
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 from lxml import etree
 
 
@@ -104,7 +104,7 @@ class ProductMixinProfile(models.AbstractModel):
                     if field in fields_filled:
                         continue
                     else:
-                        raise Warning("Not found field %s" % field)
+                        raise UserError("%s field not found" % field)
                 if profile_obj._fields[field].type in ('many2many'):
                     profile[field] = [(6, 0, value)]
             return profile
@@ -123,9 +123,9 @@ class ProductMixinProfile(models.AbstractModel):
                 else:
                     self[field] = self.profile_id[field]
             except ValueError as e:
-                raise Warning(format_except_message(e, field, self))
+                raise UserError(format_except_message(e, field, self))
             except Exception as e:
-                raise Warning("%s" % e)
+                raise UserError("%s" % e)
 
     @api.model
     def create(self, vals):
