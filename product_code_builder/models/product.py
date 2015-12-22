@@ -19,7 +19,10 @@
 #
 ###############################################################################
 
-from openerp import fields, models, api
+
+from openerp.tools.safe_eval import safe_eval
+from openerp import fields, models, api, _
+from openerp.exceptions import Warning
 
 
 class ProductTemplate(models.Model):
@@ -29,8 +32,13 @@ class ProductTemplate(models.Model):
         'Base Code',
         help="this field is used like a base to automatically create "
              "Internal Reference (default_code)")
-    auto_default_code = fields.Boolean('Auto Generate Reference',
-                                       default=True)
+    base_code_template = fields.Char(
+        'Base Code Template',
+        help="This field is used like a code base to automatically create "
+             "Internal Reference (default_code)",
+        default="''.join([o.attribute_id.code or '', o.code or ''])")
+    auto_default_code = fields.Boolean(
+        'Auto Generate Reference', default=True)
 
 
 class ProductProduct(models.Model):
@@ -39,21 +47,24 @@ class ProductProduct(models.Model):
     manual_default_code = fields.Char(
         help="This is an invisible field used to store default_code value"
     )
-    default_code = fields.Char(compute="_compute_default_code",
-                               inverse="_set_manual_default_code",
-                               store=True)
+    default_code = fields.Char(
+        compute="_compute_default_code",
+        inverse="_set_manual_default_code", store=True)
 
     @api.multi
     def _get_default_code(self):
         """ this method used to create a list of code elements  """
         self.ensure_one()
-        res = self.base_code or ''
-        for value in self.attribute_value_ids:
-            res += ''.join([
-                value.attribute_id.code or '',
-                value.code or ''
-                ])
-        return res
+        result = self.base_code or ''
+        for o in self.attribute_value_ids:
+            try:
+                result += (safe_eval(self.base_code_template, {'o': o}))
+            except AttributeError:
+                raise Warning(_('Bad expression'),
+                              _("One of your expressions contains "
+                                "a non existing attribute: %s"
+                                ))
+        return result
 
     def _set_manual_default_code(self):
         self.manual_default_code = self.default_code
@@ -61,10 +72,11 @@ class ProductProduct(models.Model):
     @api.depends('auto_default_code',
                  'attribute_value_ids.attribute_id.code',
                  'attribute_value_ids.code',
-                 'product_tmpl_id.base_code'
+                 'product_tmpl_id.base_code',
+                 'product_tmpl_id.base_code_template'
                  )
-    @api.one
     def _compute_default_code(self):
+        self.ensure_one()
         if self.auto_default_code:
             self.default_code = self._get_default_code()
         else:
