@@ -76,8 +76,8 @@ class ProductProduct(models.Model):
                  'product_tmpl_id.base_code_template'
                  )
     def _compute_default_code(self):
-        self.ensure_one()
-        if self.auto_default_code:
-            self.default_code = self._get_default_code()
-        else:
-            self.default_code = self.manual_default_code
+        for product in self:
+            if product.auto_default_code:
+                product.default_code = product._get_default_code()
+            else:
+                product.default_code = product.manual_default_code
