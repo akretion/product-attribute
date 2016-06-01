@@ -68,25 +68,25 @@ class ProductProfile(models.Model):
         """
         return [('consu', 'Consumable'), ('service', 'Service')]
 
-    @api.multi
-    def write(self, vals):
-        """ Profile update can impact products: we take care
-            to propagate ad hoc changes """
-        res = super(ProductProfile, self).write(vals)
-        keys2remove = []
-        for key in vals:
-            if (key[:LEN_DEF_STR] == PROF_DEFAULT_STR or
-                    key in get_profile_fields_to_exclude()):
-                keys2remove.append(key)
-        for key in keys2remove:
-            # we remove keys which have no matching in product template
-            vals.pop(key)
-        if vals:
-            products = self.env['product.product'].search(
-                [('profile_id', '=', self.id)])
-            if products:
-                products.write({'profile_id': self.id})
-        return res
+#    @api.multi
+#    def write(self, vals):
+#        """ Profile update can impact products: we take care
+#            to propagate ad hoc changes """
+#        res = super(ProductProfile, self).write(vals)
+#        keys2remove = []
+#        for key in vals:
+#            if (key[:LEN_DEF_STR] == PROF_DEFAULT_STR or
+#                    key in get_profile_fields_to_exclude()):
+#                keys2remove.append(key)
+#        for key in keys2remove:
+#            # we remove keys which have no matching in product template
+#            vals.pop(key)
+#        if vals:
+#            products = self.env['product.product'].search(
+#                [('profile_id', '=', self.id)])
+#            if products:
+#                products.write({'profile_id': self.id})
+#        return res
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form',
