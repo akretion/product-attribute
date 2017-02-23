@@ -352,6 +352,8 @@ class attribute_group(orm.Model):
     }
 
     def create(self, cr, uid, vals, context=None):
+        if 'attribute_ids' not in vals:
+            return super(attribute_group, self).create(cr, uid, vals, context)
         for attribute in vals['attribute_ids']:
             if vals.get('attribute_set_id') and attribute[2] and \
                 not attribute[2].get('attribute_set_id'):
