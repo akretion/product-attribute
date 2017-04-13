@@ -5,8 +5,8 @@
 from openerp import api, fields, models
 
 
-class Image(models.Model):
-    _inherit = "base_multi_image.image"
+class ProductImage(models.Model):
+    _inherit = ["storage.image"]
 
     product_variant_ids = fields.Many2many(
         comodel_name="product.product", string="Visible in these variants",

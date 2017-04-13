@@ -9,41 +9,12 @@ from openerp.osv import fields as old_fields
 
 class ProductProduct(models.Model):
     _name = "product.product"
-    _inherit = [_name, "base_multi_image.owner"]
+    _inherit = [_name, "storage.image.owner"]
 
     # Make this field computed for getting only the available images
     image_ids = fields.One2many(
-        compute="_compute_image_ids", comodel_name="base_multi_image.image",
+        compute="_compute_image_ids", comodel_name="storage.image",
         inverse="_inverse_image_ids")
-    image_main = fields.Binary(inverse="_inverse_main_image_large")
-    image_main_medium = fields.Binary(inverse="_inverse_main_image_medium")
-    image_main_small = fields.Binary(inverse="_inverse_main_image_small")
-
-    @api.multi
-    def _inverse_main_image(self, image):
-        for product in self:
-            if image:
-                product.image_ids[0].write({
-                    'file_db_store': image,
-                    'storage': 'db',
-                })
-            else:
-                product.image_ids = [(3, product.image_ids[0].id)]
-
-    @api.multi
-    def _inverse_main_image_large(self):
-        for product in self:
-            product._inverse_main_image(product.image_main)
-
-    @api.multi
-    def _inverse_main_image_medium(self):
-        for product in self:
-            product._inverse_main_image(product.image_main_medium)
-
-    @api.multi
-    def _inverse_main_image_small(self):
-        for product in self:
-            product._inverse_main_image(product.image_main_small)
 
     @api.multi
     @api.depends('product_tmpl_id', 'product_tmpl_id.image_ids',
@@ -57,6 +28,7 @@ class ProductProduct(models.Model):
 
     @api.multi
     def _inverse_image_ids(self):
+        # TODO
         for product in self:
             # Remember the list of images that were before changes
             previous_images = product.product_tmpl_id.image_ids.filtered(
@@ -104,25 +76,3 @@ class ProductProduct(models.Model):
                                len(image.product_variant_ids) == 1))
             images2remove.unlink()
         return super(ProductProduct, obj).unlink()
-
-
-class ProductProductOld(orm.Model):
-    """It is needed to use v7 api here because core model fields use the
-    ``multi`` attribute, that has no equivalent in v8, and it needs to be
-    disabled or bad things will happen. For more reference, see
-    https://github.com/odoo/odoo/issues/10799
-
-    Needed for getting the correct data in the inheritance chain. Probably
-    in v10 this won't be needed as the inheritance has been globally
-    redesigned.
-    """
-    _name = "product.product"
-    _inherit = [_name, "base_multi_image.owner"]
-    _columns = {
-        "image": old_fields.related(
-            "image_main", type="binary", store=False, multi=False),
-        "image_medium": old_fields.related(
-            "image_main_medium", type="binary", store=False, multi=False),
-        "image_small": old_fields.related(
-            "image_main_small", type="binary", store=False, multi=False)
-    }

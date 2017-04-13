@@ -13,14 +13,15 @@
     "license": "AGPL-3",
     "website": "http://www.serviciosbaeza.com",
     "category": "Sales Management",
-    "pre_init_hook": "pre_init_hook",
+    #"pre_init_hook": "pre_init_hook",
     "depends": [
-        "base_multi_image",
+        "storage_image",
         "product",
     ],
     "data": [
         'views/image_view.xml',
         'views/product_template_view.xml',
+        'views/product_product_view.xml',
     ],
     'installable': True,
     "images": [
