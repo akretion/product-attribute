@@ -3,8 +3,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 try:
-    from openerp.addons.base_multi_image.hooks import (
-        pre_init_hook_for_submodules)
+    from openerp.addons.storage_image.hooks import (
+        pre_init_hook_for_submodules,
+        post_init_hook_for_submodules)
 except ImportError:
     # Don't complain, as this will be solved as dependency when needed
     pass
@@ -12,3 +13,6 @@ except ImportError:
 
 def pre_init_hook(cr):
     pre_init_hook_for_submodules(cr, "product.template", "image")
+
+def post_init_hook(cr, registry):
+    post_init_hook_for_submodules(cr, "product.template", "image", "name")
