@@ -28,7 +28,7 @@
         'static/description/pricelist.png',
         'static/description/product.png',
     ],
-    'installable': True,
+    'installable': False,
     'license': 'AGPL-3',
     'external_dependencies': {
         'python': [],

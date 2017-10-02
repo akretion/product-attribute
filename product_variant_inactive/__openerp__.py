@@ -14,4 +14,5 @@
         'product_variant_view.xml'
     ],
     'demo': ['product.product.csv'],
+    'installable': False,
 }

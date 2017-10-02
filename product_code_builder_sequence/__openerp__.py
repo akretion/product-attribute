@@ -15,7 +15,7 @@
      'product_code_builder',
  ],
  'pre_init_hook': 'pre_init_hook',
- 'installable': True,
+ 'installable': False,
  'auto_install': True,
  'application': False,
  }

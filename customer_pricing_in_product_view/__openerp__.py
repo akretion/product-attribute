@@ -33,6 +33,6 @@
         viewing a list of products.
     ''',
     'data': ['views/res_partner_view.xml'],
-    'installable': True,
+    'installable': False,
     'active': True
 }

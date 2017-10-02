@@ -25,7 +25,7 @@
         'security/ir.model.access.csv',
         'security/ir.rule.csv',
     ],
-    'installable': True,
+    'installable': False,
     "images": [
         "images/product.png",
         "images/db.png",

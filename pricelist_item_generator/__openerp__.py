@@ -23,5 +23,5 @@
         'demo/pricelist.product.condition.csv',
         'demo/pricelist.item.template.csv',
     ],
-    'installable': True,
+    'installable': False,
 }

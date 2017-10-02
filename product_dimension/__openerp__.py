@@ -23,4 +23,5 @@
     'depends': ['product'],
     'data': ['product_view.xml'],
     'images': [],
+    'installable': False,
 }

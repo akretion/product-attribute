@@ -21,6 +21,6 @@
     'demo': [
         'demo/product.profile.csv',
     ],
-    'installable': True,
+    'installable': False,
     'license': 'AGPL-3',
 }

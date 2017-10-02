@@ -21,5 +21,5 @@
         'demo/product_demo.xml',
     ],
     'pre_init_hook': 'pre_init_hook',
-    'installable': True,
+    'installable': False,
 }

@@ -18,5 +18,5 @@
     "license": "AGPL-3",
     "category": "Product Management",
     "website": "http://www.kmee.com.br",
-    "installable": True,
+    'installable': False,
 }
