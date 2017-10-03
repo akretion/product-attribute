@@ -3,10 +3,10 @@
 # © 2015 Antiun Ingeniería S.L. - Jairo Llopis
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.osv import orm, fields
+from odoo import models, fields
 
 
-class ProductTemplate(orm.Model):
+class ProductTemplate(models.Model):
     """Reference core image fields to multi-image variants.
 
     It is needed to use v7 api here because core model fields use the ``multi``
@@ -14,22 +14,18 @@ class ProductTemplate(orm.Model):
     bad things will happen. For more reference, see
     https://github.com/odoo/odoo/issues/10799
     """
-    _name = "product.template"
+    _name = 'product.template'
     _inherit = [_name, "storage.image.owner.compatibility"]
-    _columns = {
-        "image": fields.related(
-            "image_main",
-            type="binary",
-            store=False,
-            multi=False),
-        "image_medium": fields.related(
-            "image_main_medium",
-            type="binary",
-            store=False,
-            multi=False),
-        "image_small": fields.related(
-            "image_main_small",
-            type="binary",
-            store=False,
-            multi=False)
-    }
+
+    image = fields.Binary(
+        related='image_main',
+        store=False
+    )
+    image_medium = fields.Binary(
+        related='image_main_medium',
+        store=False
+    )
+    image_small = fields.Binary(
+        related='image_main_small',
+        store=False
+    )

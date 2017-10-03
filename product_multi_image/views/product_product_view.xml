@@ -2,19 +2,21 @@
 <!-- © 2015 Antiun Ingeniería S.L. - Jairo Llopis
      © 2014-2016 Pedro M. Baeza <pedro.baeza@tecnativa.com>
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl-3). -->
-<openerp>
-<data>
+<odoo>
+
     <record id="product_kanban_view" model="ir.ui.view">
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_kanban_view"/>
-        <field name="arch" type="xml">
-            <field name="image_small" position="replace">
-                <field name="image_small_url"/>
-            </field>
-            <img class="oe_kanban_image" position="replace">
-                <img t-att-src="record.image_small_url.value" class="oe_kanban_image"/>
-            </img>
+      <field name="model">product.product</field>
+      <field name="inherit_id" ref="product.product_kanban_view"/>
+      <field name="arch" type="xml">
+        <field name="image_small" position="replace">
+          <field name="image_small_url"/>
         </field>
+        <div class="o_kanban_image" position="replace">
+          <div class="o_kanban_image">
+            <img t-att-src="record.image_small_url.value" class="o_kanban_image"/>
+          </div>
+        </div>
+      </field>
     </record>
-</data>
-</openerp>
+
+</odoo>
