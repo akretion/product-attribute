@@ -87,4 +87,3 @@ class ProductProduct(models.Model):
                                len(image.product_variant_ids) == 1))
             images2remove.unlink()
         return super(ProductProduct, obj).unlink()
-

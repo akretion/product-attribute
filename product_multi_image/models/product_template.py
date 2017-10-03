@@ -16,7 +16,7 @@ class ProductTemplate(models.Model):
     """
     _name = 'product.template'
     _inherit = [_name, "storage.image.owner.compatibility"]
-    
+
     image = fields.Binary(
         related='image_main',
         store=False
