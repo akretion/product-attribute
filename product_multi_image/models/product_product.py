@@ -21,18 +21,20 @@ class ProductProduct(models.Model):
                  'product_tmpl_id.image_ids.product_variant_ids')
     def _compute_image_ids(self):
         for product in self:
-            images = product.product_tmpl_id.image_ids.filtered(
-                lambda x: (not x.product_variant_ids or
-                           product.id in x.product_variant_ids.ids))
+            images = product.with_context(active_test=False).product_tmpl_id\
+                .image_ids.filtered(
+                    lambda x: (not x.product_variant_ids or
+                               product.id in x.product_variant_ids.ids))
             product.image_ids = [(6, 0, images.ids)]
 
     @api.multi
     def _inverse_image_ids(self):
         for product in self:
             # Remember the list of images that were before changes
-            previous_images = product.product_tmpl_id.image_ids.filtered(
-                lambda x: (not x.product_variant_ids or
-                           product.id in x.product_variant_ids.ids))
+            previous_images = product.with_context(active_test=False)\
+                .product_tmpl_id.image_ids.filtered(
+                    lambda x: (not x.product_variant_ids or
+                               product.id in x.product_variant_ids.ids))
             for image in product.image_ids:
                 if isinstance(image.id, models.NewId):
                     # Image added

@@ -19,4 +19,5 @@ class Image(models.Model):
     @api.multi
     def _compute_product_variant_count(self):
         for image in self:
-            image.product_variant_count = len(image.product_variant_ids)
+            image.product_variant_count = len(
+                image.with_context(active_test=False).product_variant_ids)
