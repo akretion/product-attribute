@@ -99,7 +99,7 @@ class ProductProfile(models.Model):
                     _logger.info(
                         " >>> %s Products updating after updated '%s' "
                         "product profile" % (len(products), rec.name))
-                    products.write({'profile_id': rec.id})
+                    products.write(new_vals)
         return res
 
     @api.model
