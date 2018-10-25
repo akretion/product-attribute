@@ -10,7 +10,7 @@ class ProductProduct(models.Model):
     _inherit = [_name, "base_multi_image.owner"]
 
     # Make this field computed for getting only the available images
-    image_ids = fields.One2many(
+    prestashop_image_ids = fields.One2many(
         comodel_name="base_multi_image.image",
         compute="_compute_image_ids",
         inverse="_inverse_image_ids",
@@ -35,19 +35,19 @@ class ProductProduct(models.Model):
     @api.multi
     def _inverse_main_image(self, image):
         for product in self:
-            has_images = bool(product.image_ids)
+            has_images = bool(product.prestashop_image_ids)
             if image:
                 write_vals = {
                     'file_db_store': image,
                     'storage': 'db',
                 }
                 if has_images:
-                    product.image_ids[0].write(write_vals)
+                    product.prestashop_image_ids[0].write(write_vals)
                 else:
-                    product.image_ids = [(0, False, write_vals)]
+                    product.prestashop_image_ids = [(0, False, write_vals)]
             else:
                 if has_images:
-                    product.image_ids = [(3, product.image_ids[0].id)]
+                    product.prestashop_image_ids = [(3, product.prestashop_image_ids[0].id)]
 
     @api.multi
     def _inverse_main_image_large(self):
@@ -65,23 +65,23 @@ class ProductProduct(models.Model):
             product._inverse_main_image(product.image_main_small)
 
     @api.multi
-    @api.depends('product_tmpl_id', 'product_tmpl_id.image_ids',
-                 'product_tmpl_id.image_ids.product_variant_ids')
+    @api.depends('product_tmpl_id', 'product_tmpl_id.prestashop_image_ids',
+                 'product_tmpl_id.prestashop_image_ids.product_variant_ids')
     def _compute_image_ids(self):
         for product in self:
-            images = product.product_tmpl_id.image_ids.filtered(
+            images = product.product_tmpl_id.prestashop_image_ids.filtered(
                 lambda x: (not x.product_variant_ids or
                            product.id in x.product_variant_ids.ids))
-            product.image_ids = [(6, 0, images.ids)]
+            product.prestashop_image_ids = [(6, 0, images.ids)]
 
     @api.multi
     def _inverse_image_ids(self):
         for product in self:
             # Remember the list of images that were before changes
-            previous_images = product.product_tmpl_id.image_ids.filtered(
+            previous_images = product.product_tmpl_id.prestashop_image_ids.filtered(
                 lambda x: (not x.product_variant_ids or
                            product.id in x.product_variant_ids.ids))
-            for image in product.image_ids:
+            for image in product.prestashop_image_ids:
                 if isinstance(image.id, models.NewId):
                     # Image added
                     image.owner_id = product.product_tmpl_id.id
@@ -107,8 +107,8 @@ class ProductProduct(models.Model):
                     image.product_variant_ids = variants.ids
 
     @api.multi
-    @api.depends('image_ids', 'product_tmpl_id.image_ids',
-                 'product_tmpl_id.image_ids.product_variant_ids')
+    @api.depends('prestashop_image_ids', 'product_tmpl_id.prestashop_image_ids',
+                 'product_tmpl_id.prestashop_image_ids.product_variant_ids')
     def _get_multi_image(self):
         """Needed for changing dependencies in this class."""
         super(ProductProduct, self)._get_multi_image()
@@ -118,7 +118,7 @@ class ProductProduct(models.Model):
         obj = self.with_context(bypass_image_removal=True)
         # Remove images that are linked only to the product variant
         for product in self:
-            images2remove = product.image_ids.filtered(
+            images2remove = product.prestashop_image_ids.filtered(
                 lambda image: (product in image.product_variant_ids and
                                len(image.product_variant_ids) == 1))
             images2remove.unlink()
