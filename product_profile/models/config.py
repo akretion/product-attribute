@@ -6,8 +6,8 @@ from odoo import fields, models
 from .product import PROFILE_MENU
 
 
-class BaseConfigSettings(models.TransientModel):
-    _inherit = 'base.config.settings'
+class ResConfigSettings(models.TransientModel):
+    _inherit = 'res.config.settings'
 
     group_product_profile = fields.Boolean(
         string="Display Product Profile fields",
