@@ -60,7 +60,7 @@ class product_customer_code(orm.Model):
     }
 
     _sql_constraints = [
-        ('unique_code', 'unique(product_code,company_id,partner_id)',
+        ('unique_code', 'unique(product_code,product_id,company_id,partner_id)',
          'Product Code of customer must be unique'),
     ]
 
