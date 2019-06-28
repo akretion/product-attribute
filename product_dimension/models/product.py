@@ -6,8 +6,54 @@
 from odoo import models, fields, api
 
 
+class ProductVolumeMixin(models.AbstractModel):
+    _name = 'product.volume.mixin'
+    _description = 'Product Volume Mixin'
+
+    def create(self, vals_list):
+        # recompute volume when dimensions are created from import because
+        # onchange won't have any effect on this case.
+        if self.env.context.get('import_file'):
+            dimension_fields = [
+                'length', 'height', 'width', 'dimensional_uom_id'
+            ]
+            for vals in vals_list:
+                if (all([vals.get(key) for key in dimension_fields]) and
+                        'volume' not in vals):
+                    dimensional_uom = self.env['uom.uom'].browse(
+                        vals['dimensional_uom_id'])
+                    volume = self.env['product.template']._calc_volume(
+                        vals['length'], vals['height'], vals['width'],
+                        dimensional_uom)
+                    vals['volume'] = volume
+        return super().create(vals_list)
+
+    def write(self, vals):
+        # recompute volume when dimensions are updated from import because
+        # onchange won't have any effect on this case.
+        # write from import can only update 1 product at a time?
+        if (self.env.context.get('import_file') and 'volume' not in vals and
+                len(self) == 1):
+            dimension_fields = [
+                'length', 'height', 'width', 'dimensional_uom_id'
+            ]
+            if any([key in dimension_fields for key in vals.keys()]):
+                length = 'length' in vals and vals['length'] or self.length
+                height = 'height' in vals and vals['height'] or self.height
+                width = 'width' in vals and vals['width'] or self.width
+                dimensional_uom = ('dimensional_uom_id' in vals and
+                                   self.env['uom.uom'].browse(
+                                       vals['dimensional_uom_id']) or
+                                   self.dimensional_uom_id)
+                volume = self.env['product.template']._calc_volume(
+                    length, height, width, dimensional_uom)
+                vals['volume'] = volume
+        return super().write(vals)
+
+
 class Product(models.Model):
-    _inherit = 'product.product'
+    _name = 'product.product'
+    _inherit = ['product.product', 'product.volume.mixin']
 
     @api.onchange('length', 'height', 'width', 'dimensional_uom_id')
     def onchange_calculate_volume(self):
@@ -31,7 +77,8 @@ class Product(models.Model):
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _name = 'product.template'
+    _inherit = ['product.template', 'product.volume.mixin']
 
     @api.model
     def _calc_volume(self, length, height, width, uom_id):
@@ -64,4 +111,4 @@ class ProductTemplate(models.Model):
     dimensional_uom_id = fields.Many2one(
         'uom.uom',
         'Dimensional UoM', related='product_variant_ids.dimensional_uom_id',
-        help='UoM for length, height, width')
+        help='UoM for length, height, width', readonly=False)
