@@ -64,4 +64,4 @@ class ProductTemplate(models.Model):
     dimensional_uom_id = fields.Many2one(
         'uom.uom',
         'Dimensional UoM', related='product_variant_ids.dimensional_uom_id',
-        help='UoM for length, height, width')
+        help='UoM for length, height, width', readonly=False)
