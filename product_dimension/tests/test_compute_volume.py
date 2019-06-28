@@ -27,6 +27,36 @@ class TestComputeVolumeOnProduct(TransactionCase):
             self.product.volume
         )
 
+    def test_it_computes_volume_from_write_import(self):
+        vals = {
+            'length': 6,
+            'height': 2,
+            'width': 10,
+            'dimensional_uom_id': self.uom_m.id,
+        }
+        product = self.env['product.product'].create({'name': 'test'})
+        prod = product.with_context(import_file=True)
+        prod.write(vals)
+        self.assertAlmostEqual(
+            120,
+            prod.volume
+        )
+
+    def test_it_computes_volume_from_create_import(self):
+        vals = {
+            'name': 'Test',
+            'length': 6,
+            'height': 2,
+            'width': 10,
+            'dimensional_uom_id': self.uom_m.id,
+        }
+        product = self.env['product.product'].with_context(import_file=True).\
+            create(vals)
+        self.assertAlmostEqual(
+            120,
+            product.volume
+        )
+
     def setUp(self):
         super(TestComputeVolumeOnProduct, self).setUp()
 
@@ -57,6 +87,35 @@ class TestComputeVolumeOnTemplate(TransactionCase):
         self.assertAlmostEqual(
             120,
             self.template.volume
+        )
+
+    def test_it_computes_volume_from_import(self):
+        vals = {
+            'length': 6,
+            'height': 2,
+            'width': 10,
+            'dimensional_uom_id': self.uom_m.id,
+        }
+        tmpl = self.template.with_context(import_file=True)
+        tmpl.write(vals)
+        self.assertAlmostEqual(
+            120,
+            tmpl.volume
+        )
+
+    def test_it_computes_volume_from_create_import(self):
+        vals = {
+            'name': 'Test',
+            'length': 6,
+            'height': 2,
+            'width': 10,
+            'dimensional_uom_id': self.uom_m.id,
+        }
+        template = self.env['product.template'].with_context(
+            import_file=True).create(vals)
+        self.assertAlmostEqual(
+            120,
+            template.volume
         )
 
     def setUp(self):
