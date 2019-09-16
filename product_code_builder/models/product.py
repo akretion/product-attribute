@@ -73,9 +73,6 @@ class ProductProduct(models.Model):
         return res
 
     @api.depends('product_tmpl_id.auto_default_code',
-                 'attribute_value_ids.attribute_id.code',
-                 'attribute_value_ids.attribute_sequence',
-                 'attribute_value_ids.code',
                  'product_tmpl_id.prefix_code')
     @api.multi
     def _compute_default_code(self):
