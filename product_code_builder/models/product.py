@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     def compute_default_auto_default_code(self):
-        if self._context.get('module') == 'product_code_builder':
+        if self._context.get('module') == 'product_code_builder' or self._context.get('install_mode'):
             # When we install the module we return False for the existing
             # record
             return False
