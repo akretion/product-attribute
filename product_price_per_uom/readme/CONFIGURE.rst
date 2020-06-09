@@ -1,0 +1,1 @@
+On products, choose a price_per_quantity_uom (like Kg), set a value for the corresponding unit (like weight) and set a sale price.
