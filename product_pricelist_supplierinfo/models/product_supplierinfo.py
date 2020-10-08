@@ -17,6 +17,6 @@ class ProductSupplierinfo(models.Model):
         sale_price = self.price
         if self.sale_margin:
             sale_price = (
-                (self.price + (self.price * (self.sale_margin / 100)))
+                (self.price * (100 /(100 - self.sale_margin)))
                 or 0.0)
         return sale_price
