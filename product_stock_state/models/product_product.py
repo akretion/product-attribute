@@ -9,7 +9,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
-from odoo.tools.float_utils import float_compare
 
 
 class ProductProduct(models.Model):
@@ -38,25 +37,6 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return self.qty_available
 
-    def _stock_state_check_in_stock(self, qty, precision):
-        return (
-            float_compare(
-                qty,
-                self._get_stock_state_threshold(),
-                precision_digits=precision,
-            )
-            == 1
-        )
-
-    def _stock_state_check_in_limited_stock(self, qty, precision):
-        return float_compare(qty, 0, precision_digits=precision) == 1
-
-    def _stock_state_check_resupplying(self, qty, precision):
-        return float_compare(self.incoming_qty, 0, precision_digits=precision) == 1
-
-    def _stock_state_check_out_of_stock(self, qty, precision):
-        return True
-
     def _available_states(self):
         return [x[0] for x in self._selection_stock_state()]
 
@@ -67,9 +47,9 @@ class ProductProduct(models.Model):
         "company_id.stock_state_threshold",
     )
     def _compute_stock_state(self):
+        precision = self.env["decimal.precision"].precision_get("Stock Threshold")
         for product in self:
             qty_available = product._get_qty_available_for_stock_state()
-            precision = self.env["decimal.precision"].precision_get("Stock Threshold")
             stock_state = False
             for state in self._available_states():
                 checker = getattr(product, "_stock_state_check_" + state)
