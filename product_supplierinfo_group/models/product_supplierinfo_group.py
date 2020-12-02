@@ -11,13 +11,14 @@ class ProductSupplierinfoGroup(models.Model):
     _name = "product.supplierinfo.group"
     _description = "Supplierinfo group"
 
-    product_tmpl_id = fields.Many2one("product.template", required=True)
+    product_tmpl_id = fields.Many2one("product.template", required=True, index=True)
     supplierinfo_ids = fields.One2many("product.supplierinfo", "supplierinfo_group_id")
     product_id = fields.Many2one(
         "product.product",
         "Product Variant",
         help="If not set, the vendor price will apply to all "
         "variants of this product.",
+        index=True,
     )
     partner_id = fields.Many2one(
         "res.partner",
@@ -26,6 +27,7 @@ class ProductSupplierinfoGroup(models.Model):
         ondelete="cascade",
         required=True,
         help="Vendor of this product",
+        index=True,
     )
     product_name = fields.Char(
         "Vendor Product Name",
