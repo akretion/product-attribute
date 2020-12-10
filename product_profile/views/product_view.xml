@@ -43,6 +43,27 @@
         </field>
     </record>
 
+    <record id="product_profile_form_view" model="ir.ui.view">
+        <field name="model">product.profile</field>
+        <field name="arch" type="xml">
+			<form string="Product Profile">
+				<sheet>
+					<group col="4">
+					    <field name="name" />
+					    <field name="type" />
+					    <field name="explanation" />
+					</group>
+					<field name="field_ids">
+					    <tree editable="top">
+					    	<field name="field_id" />
+					    	<field name="value" />
+					    </tree>
+					</field>
+				</sheet>
+			</form>
+        </field>
+    </record>
+
     <record id="product_profile_action" model="ir.actions.act_window">
         <field name="name">Product Profiles</field>
         <field name="res_model">product.profile</field>

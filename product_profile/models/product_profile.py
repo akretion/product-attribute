@@ -1,5 +1,7 @@
+# Copyright 2020 Akretion (https://www.akretion.com).
 # © 2015 David BEAL @ Akretion
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# @author Pierrick Brun <pierrick.brun@akretion.com>
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import json
 import logging
@@ -73,6 +75,7 @@ class ProductProfile(models.Model):
         required=True,
         help="See 'type' field in product.template",
     )
+    field_ids = fields.Many2many(comodel_name="product.profile.field")
 
     def write(self, vals):
         """Profile update can impact products: we take care to propagate
@@ -150,6 +153,17 @@ class ProductProfile(models.Model):
             doc[0].addprevious(alert)
             res["arch"] = etree.tostring(doc, pretty_print=True)
         return res
+
+
+class ProductProfileField(models.Model):
+    _name = "product.profile.field"
+    _description = "Product Profile Field"
+    _rec_name = "field_id"
+
+    field_id = fields.Many2one(
+        "ir.model.fields", "Field Name", required=True, ondelete="cascade"
+    )  # , domain="[('model_id', '=', 'product.product')]")
+    value = fields.Char("Value", required=True)
 
 
 class ProductMixinProfile(models.AbstractModel):
@@ -245,7 +259,7 @@ class ProductMixinProfile(models.AbstractModel):
         if view_type == "form":
             doc = etree.XML(res["arch"])
             fields = self._get_profile_fields()
-            fields_def = self.fields_get(allfields=fields)
+            # fields_def = self.fields_get(allfields=fields)
             if self.env.uid not in users_in_profile_group:
                 attrs = {"invisible": [("profile_id", "!=", False)]}
             else:

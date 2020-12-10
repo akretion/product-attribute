@@ -1,3 +1,6 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
 "access_product_profile_manager","product.profile","model_product_profile","product_profile.group_product_profile_manager",1,1,1,1
+"access_product_profile_manager_field","product.profile.field","model_product_profile_field","product_profile.group_product_profile_manager",1,1,1,1
+"access_product_profile_manager_fields","ir.model.fields","base.model_ir_model_fields","product_profile.group_product_profile_manager",1,0,0,0
 "access_product_profile_select","product.profile","model_product_profile","base.group_user",1,0,0,0
+"access_product_profile_select_field","product.profile.field","product_profile.model_product_profile_field","base.group_user",1,0,0,0
