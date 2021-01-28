@@ -5,7 +5,7 @@
     "name": "Product Supplierinfo Group",
     "version": "12.0.1.0.0",
     "category": "Product",
-    "website": "https://github.com/OCA/product-attribute/",
+    "website": "https://github.com/OCA/product-attribute",
     "author": "Akretion," " Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "installable": True,
