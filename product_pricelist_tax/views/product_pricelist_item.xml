@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2021 Akretion
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record id="product_pricelist_item_form_view" model="ir.ui.view">
+        <field name="name">product.pricelist.item.form (in product_pricelist_tax)</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Taxes field -->
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="product_tax_ids" attrs="{'invisible': ['|', ('product_tax_ids', '=', []), ('display_fixed_price_tax', '=', False)]}" widget="many2many_tags"/>
+            </xpath>
+            <!-- Move fixed_price -->
+            <xpath expr="//field[@name='fixed_price']" position="attributes">
+                <attribute name="nolabel">0</attribute>
+                <attribute name="string">Fixed Price excl. tax</attribute>
+            </xpath>
+            <xpath expr="//field[@name='compute_price']/../.." position="after">
+                <group name="fixed_prices" attrs="{'invisible':[('compute_price', '!=', 'fixed')]}"/>
+            </xpath>
+            <xpath expr="//group[@name='fixed_prices']" position="inside">
+                <xpath expr="//field[@name='fixed_price']" position="move"/>
+                <field name="fixed_price_tax" widget='monetary'
+                    options="{'currency_field': 'currency_id', 'field_digits': True}"
+                    attrs="{'invisible':[('display_fixed_price_tax', '=', False)]}"/>
+                <field name="display_fixed_price_tax" />
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.common.form (in product_pricelist_tax)</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='item_ids']/tree" position="inside">
+                <field name="display_fixed_price_tax" invisible="1"/>
+                <field name="fixed_price_tax"
+                    string="Including Taxes"  widget='monetary'
+                    options="{'currency_field': 'currency_id', 'field_digits': True}"
+                    attrs="{'invisible':[('display_fixed_price_tax', '=', False)]}"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
