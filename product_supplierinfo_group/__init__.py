@@ -24,18 +24,21 @@ MAPPING_FIELDS_DB = {
 
 def fill_required_group_id_column(cr):
     """
-    On installing this module, we have the problem of adding on product.supplierinfo:
+    On installing this module, we have the problem of adding
+    on product.supplierinfo:
 
-        supplierinfo_group_id = fields.Many2one("product.supplierinfo.group", required=True)
+        supplierinfo_group_id = fields.Many2one("product.supplierinfo.group",
+             required=True)
 
-    This is complicated because the product_supplierinfo_group table doesn't exist yet:
+    This is complicated because the product_supplierinfo_group table
+    doesn't exist yet:
         - no default value is possible
         - can't put supplierinfo_group_id=0 because psycopg/postgres
           enforces constraint that the id exists in DB
         - can't suspend constraints without superuser privileges
         - we want to keep it required=True
-        - we don't want to install module twice (once where the constraint required can't
-          be applied at the DB layer, once where it can)
+        - we don't want to install module twice (once where the constraint
+          required can't be applied at the DB layer, once where it can)
 
     Thus, we must jump through the hoops:
         - Create the table product_supplierinfo_group
@@ -44,7 +47,7 @@ def fill_required_group_id_column(cr):
     """
     cr.execute(
         "SELECT count(id) FROM %s",
-        (AsIs("product_supplierinfo")),
+        (AsIs("product_supplierinfo"),),
     )
     res = cr.fetchall()
     if not res[0][0]:
