@@ -12,7 +12,10 @@ class ProductPricelistItem(models.Model):
     def _compute_tax_incl(self, price):
         """Returns `price` with added self's taxes"""
         self.ensure_one()
-        res_tax = self.product_tax_ids.compute_all(price, currency=self.currency_id)
+        prod_id = self.product_id or self.product_tmpl_id.product_variant_id
+        res_tax = self.product_tax_ids.compute_all(
+            price, currency=self.currency_id, product=prod_id
+        )
         return res_tax["total_included"]
 
     product_tax_ids = fields.Many2many(
@@ -60,7 +63,7 @@ class ProductPricelistItem(models.Model):
         for item in self:
             rounding = item.currency_id.rounding
             starting_price_excl = item.fixed_price_tax - rounding
-            
+
             if item.product_tax_ids and starting_price_excl > 0:
                 price_excl = starting_price_excl
                 price_incl = item._compute_tax_incl(price_excl)
