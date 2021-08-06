@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field name="lst_price_per_quantity"/>
+                <field name="price_per_quantity_uom"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_template_only_form_view" model="ir.ui.view">
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+			<!-- There is only this field on the template_only form -->
+            <field name="categ_id" position="after">
+                <field name="list_price_per_quantity"/>
+                <field name="price_per_quantity_uom"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
