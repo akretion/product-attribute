@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2021 Akretion (https://www.akretion.com).
 # @author Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
@@ -25,5 +26,5 @@
         "views/product_template_view.xml",
         "security/ir.model.access.csv",
     ],
-    "demo": ["demo/product_demo.xml"],
+    #"demo": ["demo/product_demo.xml"],
 }
