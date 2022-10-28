@@ -1,1 +1,1 @@
-This module add `mm, ml, week, work_week` uom to system.
+This module adds the units of measure `ml, week and work_week`.
