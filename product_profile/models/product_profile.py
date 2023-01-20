@@ -95,6 +95,11 @@ class ProductProfile(models.Model):
 
     def _refresh_products_vals(self):
         """Reapply profile values on products"""
+        fnames = [
+            fname
+            for fname in self.env["product.product"]._get_profile_fields()
+            if not fname.startswith(PROF_DEFAULT_STR)
+        ]
         for rec in self:
             products = self.env["product.product"].search([("profile_id", "=", rec.id)])
             if products:
@@ -102,10 +107,21 @@ class ProductProfile(models.Model):
                     " >>> %s Products updating after updated '%s' pro"
                     "duct profile" % (len(products), rec.name)
                 )
-                data = products._get_vals_from_profile(
-                    {"profile_id": rec.id}, ignore_defaults=True
-                )
-                products.write(data)
+                for product in products:
+                    # Only write field that have changed to avoid
+                    # useless trigger of computed fields
+                    vals = {}
+                    for fname in fnames:
+                        if product[fname] != rec[fname]:
+                            vals.update(
+                                {
+                                    fname: product._fields[fname].convert_to_write(
+                                        rec[fname], product
+                                    )
+                                }
+                            )
+                    if vals:
+                        product.write(vals)
 
     @api.model
     def check_useless_key_in_vals(self, vals, key):
@@ -210,11 +226,12 @@ class ProductMixinProfile(models.AbstractModel):
                 except Exception as e:
                     raise UserError(format_except_message(e, field, self))
 
-    @api.model
-    def create(self, vals):
-        if vals.get("profile_id"):
-            vals.update(self._get_vals_from_profile(vals, ignore_defaults=False))
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get("profile_id"):
+                vals.update(self._get_vals_from_profile(vals, ignore_defaults=False))
+        return super().create(vals_list)
 
     def write(self, vals):
         profile_changed = vals.get("profile_id")
