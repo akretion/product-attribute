@@ -2,6 +2,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from copy import deepcopy
+from datetime import date
+
+from dateutil.relativedelta import relativedelta
 
 from odoo.tests import common
 
@@ -23,6 +26,8 @@ class TestProductSupplierinfoGroup(common.SavepointCase):
             "min_qty": 5.0,
             "price": 10.0,
             "delay": 1,
+            "date_start": date.today() - relativedelta(months=1),
+            "date_end": date.today() + relativedelta(months=1),
         }.copy()
 
     def test_no_group(self):
@@ -89,4 +94,8 @@ class TestProductSupplierinfoGroup(common.SavepointCase):
         self.assertIn(
             '<td class="table_price_note_cell">6.0</td>',
             group.unit_price_note,
+        )
+        self.assertIn(
+            f'<td class="table_date_note_cell">{date.today() + relativedelta(months=1)}</td>',
+            group.date_start_end_note,
         )
