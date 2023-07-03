@@ -5,9 +5,11 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='description']" position="inside">
-                <field colspan="2" name="description_sale_short" />
-                <field colspan="2" name="description_sale_long" />
+            <xpath expr="//group[@name='description']" position="after">
+                <group name="Additionnal description" string="Additionnal Descriptions">
+                    <field name="description_sale_short" />
+                    <field name="description_sale_long" />
+                </group>
             </xpath>
         </field>
     </record>
