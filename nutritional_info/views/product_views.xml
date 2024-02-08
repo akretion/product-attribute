@@ -17,15 +17,13 @@
                             </div>
                         </group>
                     </group>
-                    <group>
-                        <field name="nutritional_value_ids" nolabel="1">
-                            <tree editable="bottom" default_order="sequence, id">
-                                <field name="type_id" />
-                                <field name="value" />
-                                <field name="sequence" invisible="1" />
-                            </tree>
-                        </field>
-                    </group>
+                    <field name="nutritional_value_ids" nolabel="1">
+                        <tree editable="bottom" default_order="sequence, id">
+                            <field name="type_id" />
+                            <field name="value" />
+                            <field name="sequence" invisible="1" />
+                        </tree>
+                    </field>
                 </page>
             </page>
         </field>
@@ -48,16 +46,14 @@
                                 <field name="nutritional_reference_uom" />
                             </div>
                         </group>
-                    </group>
-                    <group>
-                        <field name="nutritional_value_ids" nolabel="1">
-                            <tree editable="bottom" default_order="sequence, id">
-                                <field name="type_id" />
-                                <field name="value" />
-                                <field name="sequence" invisible="1" />
-                            </tree>
-                        </field>
-                    </group>
+                    </group>     
+                    <field name="nutritional_value_ids" nolabel="1">
+                        <tree editable="bottom" default_order="sequence, id">
+                            <field name="type_id" />
+                            <field name="value" />
+                            <field name="sequence" invisible="1" />
+                        </tree>
+                    </field>
                 </page>
             </page>
         </field>
