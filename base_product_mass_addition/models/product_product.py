@@ -38,7 +38,7 @@ class ProductProduct(models.Model):
                 else:
                     parent._add_quick_line(product, quick_line._name)
 
-    def modified(self, fnames, create=False, before=False):
+    def _DISABLED_modified(self, fnames, create=False, before=False):
         # OVERRIDE to supress LOG_ACCESS_COLUMNS writes if we're only writing on quick
         # magic fields, as they could lead to concurrency issues.
         #
