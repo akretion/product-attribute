@@ -45,7 +45,7 @@ class TestProductMassAddition(TransactionCase):
         self.product.qty_to_process = 0.0
         self.assertFalse(self.order.line_ids)
 
-    def _DISABLED_test_quick_should_not_write_on_product(self):
+    def test_quick_should_not_write_on_product(self):
         """Using quick magic fields shouldn't write on product's metadata"""
         user_demo = self.env.ref("base.user_demo")
         self.product.write_uid = user_demo
