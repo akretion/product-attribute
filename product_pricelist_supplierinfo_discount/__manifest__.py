@@ -2,7 +2,7 @@
 # Copyright 2018 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
-    "name": "Supplier info prices in sales pricelists",
+    "name": "Supplier info prices in sales pricelists With Discount",
     "summary": "Allows to create priceslists based on supplier info",
     "version": "18.0.1.0.0",
     "category": "Sales/Sales",

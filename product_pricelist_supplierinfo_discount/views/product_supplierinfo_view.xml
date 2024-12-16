@@ -10,7 +10,7 @@
                 <field
                     name="sale_margin"
                     string="Sale margin"
-                    groups="product_pricelist_supplierinfo.group_supplierinfo_pricelist_sale_margin"
+                    groups="product_pricelist_supplierinfo_discount.group_supplierinfo_pricelist_sale_margin"
                 />
             </field>
         </field>
@@ -24,10 +24,10 @@
             <xpath expr="//label[@for='date_start']" position="before">
                 <label
                     for="sale_margin"
-                    groups="product_pricelist_supplierinfo.group_supplierinfo_pricelist_sale_margin"
+                    groups="product_pricelist_supplierinfo_discount.group_supplierinfo_pricelist_sale_margin"
                 />
                 <div
-                    groups="product_pricelist_supplierinfo.group_supplierinfo_pricelist_sale_margin"
+                    groups="product_pricelist_supplierinfo_discount.group_supplierinfo_pricelist_sale_margin"
                 >
                     <field name="sale_margin" class="oe_inline" />
                 </div>
