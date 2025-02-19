@@ -7,8 +7,11 @@
 
 {
     "name": "Product Stock State",
-    "summary": "Compute the state of a product's stock"
-    "the stock level and sale_ok field",
+    "summary": """Compute the state of a product's stock
+        Offers 'sale ok' field
+        Tracks the stock level and manage the following product's stock states based on rules :
+        'on demand' 'in_stock' 'limited stock' 'resupplying' 'out of stock'
+    """,
     "version": "14.0.1.0.1",
     "website": "https://github.com/OCA/product-attribute",
     "author": " Akretion, GRAP, Odoo Community Association (OCA)",
