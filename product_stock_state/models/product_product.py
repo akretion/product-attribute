@@ -72,6 +72,11 @@ class ProductProduct(models.Model):
         "on_demand",
     )
     def _compute_stock_state(self):
+        """
+        This method updates {stock_state} of each triggered {product}.
+        {stock_state} = first {state} where {product}_stock_state_check_{state} is True
+        {state} ordering is insured by _available_states method
+        """
         precision = self.env["decimal.precision"].precision_get("Stock Threshold")
         for product in self:
             qty_available = product._get_qty_available_for_stock_state()

@@ -24,7 +24,9 @@ class ProductTemplate(models.Model):
     )
 
     manual_stock_state_threshold = fields.Float(digits="Stock Threshold")
+
     on_demand = fields.Boolean(
+        default=False,
         help="This field allows you to force the stock state to the on-demand value"
     )
 

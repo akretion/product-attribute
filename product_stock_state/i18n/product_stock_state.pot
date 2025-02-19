@@ -86,6 +86,11 @@ msgid "On Demand"
 msgstr ""
 
 #. module: product_stock_state
+#: model:ir.model.fields,help:product_stock_state.field_product_template__on_demand
+msgid "This field allows you to force the stock state to the on-demand value"
+msgstr ""
+
+#. module: product_stock_state
 #: model:ir.model,name:product_stock_state.model_product_product
 msgid "Product"
 msgstr ""
