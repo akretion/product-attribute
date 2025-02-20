@@ -4,18 +4,14 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="stock.view_template_property_form" />
         <field name="arch" type="xml">
-
-            <xpath expr="//div[@name='options']" position="after">
-                <div>
-                    <field name="on_demand"/>
-                    <label for="on_demand"/>
-                </div>
-            </xpath>
-
             <xpath expr="//group[@name='group_lots_and_weight']" position="after">
-                <group name="treshold" string="Stock threshold" attrs="{'invisible': [('on_demand', '=', True)]}">
-                    <field name="stock_state_threshold"/>
-                    <field name="manual_stock_state_threshold"  class="oe_edit_only"/>
+                <group name="treshold" string="Stock threshold">
+                    <field name="on_demand"/>
+                    <field name="stock_state_threshold" 
+                           attrs="{'invisible': [('on_demand', '=', True)]}"/>
+                    <field name="manual_stock_state_threshold"  
+                           class="oe_edit_only"
+                           attrs="{'invisible': [('on_demand', '=', True)]}"/>
                 </group>
             </xpath>
         </field>
