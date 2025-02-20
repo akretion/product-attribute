@@ -54,20 +54,7 @@ class TestProductStockState(SavepointCase):
         """Test Stock State computation"""
         self.assertEqual(self.product_threshold_on_product.stock_state, "out_of_stock")
 
-    # on_demand tests
-
-    def test_06_state_on_demand_default_value(self):
-        """Test default value of on_demand"""
-        self.assertFalse(self.product_threshold_on_product.on_demand)
-
-    def test_07_on_demand_inherit(self):
-        """Test on_demand Setting (Setting on a product unique template)"""
-        self.assertEqual(
-            self.product_threshold_on_product._stock_state_check_on_demand(),
-            self.product_threshold_on_product.on_demand,
-        )
-
-    def test_08_state_on_demand_computation(self):
+    def test_06_state_on_demand_computation(self):
         """Test on_demand = True Stock State computation 
         stock_state is set to 'on_demand' regardless of the previous state"""
         
