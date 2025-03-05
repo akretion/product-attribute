@@ -56,12 +56,20 @@ class TestProductStockState(SavepointCase):
 
     def test_06_state_on_demand_computation(self):
         """Test on_demand = True Stock State computation 
-        stock_state is set to 'on_demand' regardless of the previous state"""
+        stock_state is set to 'on_demand' :
+        - regardless of the previous state
+        - regardless of the relative value of stock_state_threshold vs qty_available"""
         
         self.product_threshold_on_product.on_demand = True
         states = self.product_threshold_on_product._available_states()
 
-        for state in states:
-            self.product_threshold_on_product.stock_state = state
-            self.product_threshold_on_product._compute_stock_state()
-            self.assertEqual(self.product_threshold_on_product.stock_state, 'on_demand')
+        stock_state_threshold = 30
+        self.product_threshold_on_product.stock_state_threshold = stock_state_threshold
+
+        for qty in [stock_state_threshold + 1, stock_state_threshold - 1]:
+            self.product_threshold_on_product.qty_available = qty
+
+            for state in states:
+                self.product_threshold_on_product.stock_state = state
+                self.product_threshold_on_product._compute_stock_state()
+                self.assertEqual(self.product_threshold_on_product.stock_state, 'on_demand')
