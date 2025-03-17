@@ -8,6 +8,16 @@ from odoo import api, fields, models
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    # dirty back port: pasted from addons/product/models/product_template#18.0
+    product_variant_count = fields.Integer(
+        '# Product Variants', compute='_compute_product_variant_count')
+
+    @api.depends('product_variant_ids.product_tmpl_id')
+    def _compute_product_variant_count(self):
+        for template in self:
+            template.product_variant_count = len(template.product_variant_ids)
+    # end of dirty backport
+
     product_volume = fields.Float(
         "Volume in product UOM",
         compute="_compute_product_volume",

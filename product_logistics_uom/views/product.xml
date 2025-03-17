@@ -6,6 +6,7 @@
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
             <!-- weight -->
+            <field name="product_variant_count" invisible="1" />
             <field name="weight" position="attributes">
                 <attribute name="invisible">1</attribute>
             </field>
@@ -15,13 +16,13 @@
             <label for="weight" position="after">
                 <label
                     for="product_weight"
-                    invisible="product_variant_count &gt; 1 and not is_product_variant"
+                    attrs="{'invisible': [('product_variant_count', '&gt;', '1'), ('is_product_variant', '=', True)] }"
                 />
             </label>
             <field name="weight" position="after">
                 <field name="show_weight_uom_warning" invisible="1" />
                 <field name="product_weight" string="Weight" class="oe_inline" />
-                <span invisible="not show_weight_uom_warning">
+                <span attrs="{'invisible': [('show_weight_uom_warning', '=', False)] }">
                     <i
                         class="fa fa-fw fa-warning text-warning"
                         title="Value too small for the selected uom. Select another uom to display the value."
@@ -34,7 +35,8 @@
                 />
             </field>
             <field name="weight_uom_name" position="before">
-                <span invisible="not show_weight_uom_warning" groups="!uom.group_uom">
+                <span attrs="{'invisible': [('show_weight_uom_warning', '=', False)] }" 
+                    groups="!uom.group_uom">
                     <i
                         class="fa fa-fw fa-warning text-warning"
                         title="Value too small for the selected uom. Select another uom to display the value."
@@ -56,13 +58,13 @@
                 <label
                     for="product_volume"
                     string="Volume"
-                    invisible="product_variant_count &gt; 1 and not is_product_variant"
+                    attrs="{'invisible': [('product_variant_count', '&gt;', '1'), ('is_product_variant', '=', True)] }"
                 />
             </label>
             <field name="volume" position="after">
                 <field name="show_volume_uom_warning" invisible="1" />
                 <field name="product_volume" class="oe_inline" />
-                <span invisible="not show_volume_uom_warning">
+                <span attrs="{'invisible': [('show_volume_uom_warning', '=', False)] }">
                     <i
                         class="fa fa-fw fa-warning text-warning"
                         title="Value too small for the selected uom. Select another uom to display the value."
@@ -75,7 +77,8 @@
                 />
             </field>
             <field name="volume_uom_name" position="before">
-                <span invisible="not show_volume_uom_warning" groups="!uom.group_uom">
+                <span attrs="{'invisible': [('show_volume_uom_warning', '=', False)]}"
+                    groups="!uom.group_uom">
                     <i
                         class="fa fa-fw fa-warning text-warning"
                         title="Value too small for the selected uom. Select another uom to display the value."
