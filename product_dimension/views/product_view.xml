@@ -21,10 +21,13 @@
         <field name="inherit_id" ref="product.product_template_only_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//group[@name='inventory']" position="inside">
+                <field name="product_variant_count" invisible="1" />
+
                 <group
                     string="Dimensions"
                     name="dimensions"
-                    invisible="product_variant_count &gt; 1"
+                    attrs="{'invisible': [('product_variant_count', '&gt;', 1)] }" 
+
                 >
                     <field name="dimensional_uom_id" options="{'no_create': True}" />
                     <field name="product_length" string="Length" />
