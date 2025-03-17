@@ -8,18 +8,39 @@ from odoo import api, fields, models
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    product_volume = fields.Float(
+        "Volume in product UOM",
+        compute="_compute_product_volume",
+        inverse="_inverse_product_volume",
+        digits="Volume",
+    )
+    product_weight = fields.Float(
+        "Weight in product UOM",
+        compute="_compute_product_weight",
+        digits="Stock Weight",
+        inverse="_inverse_product_weight",
+        store=True,
+    )
+
+    # remove rounding from volume and weight
+    # this is needed to avoid rounding errors when converting between units
+    # and is safe since we display the volume and weight in the product's
+    # volume and weight UOM. In the same time, we need to keep the volume
+    # we ensure that no information is lost by storing the volume and weight
+    # without rounding.
+    volume = fields.Float(digits=False)
+    weight = fields.Float(digits=False)
     volume_uom_id = fields.Many2one(
         "uom.uom",
         string="Volume Unit of Measure",
         domain=lambda self: [
             ("category_id", "=", self.env.ref("uom.product_uom_categ_vol").id)
         ],
-        default=lambda x: x._get_volume_uom_id_from_ir_config_parameter(),
+        default=lambda self: self._get_volume_uom_id_from_ir_config_parameter(),
     )
     volume_uom_name = fields.Char(
         string="Volume unit of measure label",
         related="volume_uom_id.name",
-        readonly=True,
     )
 
     weight_uom_id = fields.Many2one(
@@ -28,21 +49,27 @@ class ProductTemplate(models.Model):
         domain=lambda self: [
             ("category_id", "=", self.env.ref("uom.product_uom_categ_kgm").id)
         ],
-        compute=False,
-        default=lambda x: x._get_weight_uom_id_from_ir_config_parameter(),
+        default=lambda self: self._get_weight_uom_id_from_ir_config_parameter(),
     )
 
     weight_uom_name = fields.Char(
         string="Weight unit of measure label",
         related="weight_uom_id.name",
-        readonly=True,
     )
 
-    product_uom_readonly = fields.Boolean(compute="_compute_product_uom_readonly")
+    show_volume_uom_warning = fields.Boolean(
+        help="Technical field used to warn the user to change the volume"
+        "uom since the value for product_volume is too small and has been"
+        "rounded.",
+        compute="_compute_show_volume_uom_warning",
+    )
 
-    def _compute_product_uom_readonly(self):
-        # helper for view form
-        self.product_uom_readonly = not self.env.user.has_group("uom.group_uom")
+    show_weight_uom_warning = fields.Boolean(
+        help="Technical field used to warn the user to change the weight"
+        "uom since the value for product_weight is too small and has been"
+        "rounded.",
+        compute="_compute_show_weight_uom_warning",
+    )
 
     @api.model
     def _get_volume_uom_id_from_ir_config_parameter(self):
@@ -70,3 +97,54 @@ class ProductTemplate(models.Model):
             return self.env["uom.uom"].browse(int(default_uom))
         else:
             return super()._get_length_uom_id_from_ir_config_parameter()
+
+    @api.depends(
+        "product_variant_ids",
+        "product_variant_ids.product_volume",
+        "volume",
+        "volume_uom_id",
+    )
+    def _compute_product_volume(self):
+        for template in self:
+            template.product_volume = (
+                template.product_variant_ids.product_volume
+                if template.product_variant_count == 1
+                else 0.0
+            )
+
+    def _inverse_product_volume(self):
+        for template in self:
+            if template.product_variant_count == 1:
+                template.product_variant_ids.product_volume = template.product_volume
+
+    @api.depends("weight", "weight_uom_id")
+    def _compute_product_weight(self):
+        for template in self:
+            template.product_weight = (
+                template.product_variant_ids.product_weight
+                if template.product_variant_count == 1
+                else 0.0
+            )
+
+    def _inverse_product_weight(self):
+        for template in self:
+            if template.product_variant_count == 1:
+                template.product_variant_ids.product_weight = template.product_weight
+
+    @api.depends("volume", "volume_uom_id")
+    def _compute_show_volume_uom_warning(self):
+        for template in self:
+            template.show_volume_uom_warning = (
+                template.product_variant_ids.show_volume_uom_warning
+                if template.product_variant_count == 1
+                else False
+            )
+
+    @api.depends("weight", "weight_uom_id")
+    def _compute_show_weight_uom_warning(self):
+        for template in self:
+            template.show_weight_uom_warning = (
+                template.product_variant_ids.show_weight_uom_warning
+                if template.product_variant_count == 1
+                else False
+            )
