@@ -34,28 +34,10 @@ msgid "Dimensions"
 msgstr "Dimensions"
 
 #. module: product_dimension
-#: model:ir.model.fields,field_description:product_dimension.field_product_product__display_name
-#: model:ir.model.fields,field_description:product_dimension.field_product_template__display_name
-msgid "Display Name"
-msgstr ""
-
-#. module: product_dimension
 #: model_terms:ir.ui.view,arch_db:product_dimension.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:product_dimension.product_template_only_form_view
 msgid "Height"
 msgstr "Hauteur"
-
-#. module: product_dimension
-#: model:ir.model.fields,field_description:product_dimension.field_product_product__id
-#: model:ir.model.fields,field_description:product_dimension.field_product_template__id
-msgid "ID"
-msgstr ""
-
-#. module: product_dimension
-#: model:ir.model.fields,field_description:product_dimension.field_product_product____last_update
-#: model:ir.model.fields,field_description:product_dimension.field_product_template____last_update
-msgid "Last Modified on"
-msgstr ""
 
 #. module: product_dimension
 #: model_terms:ir.ui.view,arch_db:product_dimension.product_normal_form_view
@@ -64,20 +46,26 @@ msgid "Length"
 msgstr "Longueur"
 
 #. module: product_dimension
-#: model:ir.model,name:product_dimension.model_product_product
+#: model:ir.model,name:product_dimension.model_product_template
 msgid "Product"
 msgstr "Produit"
 
 #. module: product_dimension
-#: model:ir.model,name:product_dimension.model_product_template
-msgid "Product Template"
-msgstr "Modèle de produit"
+#: model:ir.model,name:product_dimension.model_product_product
+msgid "Product Variant"
+msgstr ""
 
 #. module: product_dimension
 #: model:ir.model.fields,help:product_dimension.field_product_product__dimensional_uom_id
 #: model:ir.model.fields,help:product_dimension.field_product_template__dimensional_uom_id
 msgid "UoM for length, height, width"
 msgstr "UdM pour longueur, hauteur, largeur"
+
+#. module: product_dimension
+#: model:ir.model.fields,field_description:product_dimension.field_product_product__volume
+#: model:ir.model.fields,field_description:product_dimension.field_product_template__volume
+msgid "Volume"
+msgstr ""
 
 #. module: product_dimension
 #: model_terms:ir.ui.view,arch_db:product_dimension.product_normal_form_view
@@ -102,3 +90,6 @@ msgstr "Longueur"
 #: model:ir.model.fields,field_description:product_dimension.field_product_template__product_width
 msgid "width"
 msgstr "Largeur"
+
+#~ msgid "Product Template"
+#~ msgstr "Modèle de produit"

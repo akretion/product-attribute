@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: product-attribute (9.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-22 01:40+0000\n"
-"PO-Revision-Date: 2022-03-22 13:17+0000\n"
+"PO-Revision-Date: 2022-03-21 14:17+0000\n"
 "Last-Translator: Noel estudillo <noelestudilloviera@gmail.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/oca/OCA-product-"
 "attribute-9-0/language/ca/)\n"
@@ -32,28 +32,10 @@ msgid "Dimensions"
 msgstr "Dimensions"
 
 #. module: product_dimension
-#: model:ir.model.fields,field_description:product_dimension.field_product_product__display_name
-#: model:ir.model.fields,field_description:product_dimension.field_product_template__display_name
-msgid "Display Name"
-msgstr ""
-
-#. module: product_dimension
 #: model_terms:ir.ui.view,arch_db:product_dimension.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:product_dimension.product_template_only_form_view
 msgid "Height"
 msgstr "Alçada"
-
-#. module: product_dimension
-#: model:ir.model.fields,field_description:product_dimension.field_product_product__id
-#: model:ir.model.fields,field_description:product_dimension.field_product_template__id
-msgid "ID"
-msgstr ""
-
-#. module: product_dimension
-#: model:ir.model.fields,field_description:product_dimension.field_product_product____last_update
-#: model:ir.model.fields,field_description:product_dimension.field_product_template____last_update
-msgid "Last Modified on"
-msgstr ""
 
 #. module: product_dimension
 #: model_terms:ir.ui.view,arch_db:product_dimension.product_normal_form_view
@@ -62,20 +44,26 @@ msgid "Length"
 msgstr "Llargada"
 
 #. module: product_dimension
-#: model:ir.model,name:product_dimension.model_product_product
+#: model:ir.model,name:product_dimension.model_product_template
 msgid "Product"
 msgstr "Producte"
 
 #. module: product_dimension
-#: model:ir.model,name:product_dimension.model_product_template
-msgid "Product Template"
-msgstr "Plantilla de producte"
+#: model:ir.model,name:product_dimension.model_product_product
+msgid "Product Variant"
+msgstr ""
 
 #. module: product_dimension
 #: model:ir.model.fields,help:product_dimension.field_product_product__dimensional_uom_id
 #: model:ir.model.fields,help:product_dimension.field_product_template__dimensional_uom_id
 msgid "UoM for length, height, width"
 msgstr "UoM per a longitud, alçada i amplada"
+
+#. module: product_dimension
+#: model:ir.model.fields,field_description:product_dimension.field_product_product__volume
+#: model:ir.model.fields,field_description:product_dimension.field_product_template__volume
+msgid "Volume"
+msgstr ""
 
 #. module: product_dimension
 #: model_terms:ir.ui.view,arch_db:product_dimension.product_normal_form_view
@@ -100,3 +88,6 @@ msgstr "llargada"
 #: model:ir.model.fields,field_description:product_dimension.field_product_template__product_width
 msgid "width"
 msgstr "amplada"
+
+#~ msgid "Product Template"
+#~ msgstr "Plantilla de producte"
