@@ -94,7 +94,12 @@ msgstr "Seuil pour l'état du stock manuel"
 #: model:ir.model.fields,field_description:product_stock_state.field_product_product__on_demand
 #: model:ir.model.fields,field_description:product_stock_state.field_product_template__on_demand
 msgid "On Demand"
-msgstr "A la demande"
+msgstr "Sur demande"
+
+#. module: product_stock_state
+#: model:ir.model.fields,help:product_stock_state.field_product_template_on_demand
+msgid "This field allows you to force the stock state to the on-demand value"
+msgstr "Ce champ vous permet de forcer l'état du stock à 'À la demande'"
 
 #. module: product_stock_state
 #: model:ir.model,name:product_stock_state.model_product_product
