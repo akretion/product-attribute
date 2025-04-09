@@ -6,7 +6,6 @@
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
             <!-- weight -->
-            <field name="product_variant_count" invisible="1" />
             <field name="weight" position="attributes">
                 <attribute name="invisible">1</attribute>
             </field>
@@ -14,8 +13,10 @@
                 <attribute name="invisible">1</attribute>
             </label>
             <label for="weight" position="after">
+                <field name="product_variant_count" invisible="1" />
                 <label
                     for="product_weight"
+                    string="Weight"
                     attrs="{'invisible': [('product_variant_count', '&gt;', '1'), ('is_product_variant', '=', True)] }"
                 />
             </label>
@@ -55,6 +56,7 @@
                 <attribute name="invisible">1</attribute>
             </label>
             <label for="volume" position="after">
+                <field name="product_variant_count" invisible="1" />
                 <label
                     for="product_volume"
                     string="Volume"
