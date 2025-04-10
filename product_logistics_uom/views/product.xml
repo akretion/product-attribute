@@ -17,7 +17,7 @@
                 <label
                     for="product_weight"
                     string="Weight"
-                    attrs="{'invisible': [('product_variant_count', '&gt;', '1'), ('is_product_variant', '=', True)] }"
+                    attrs="{'invisible': [('product_variant_count', '&gt;', '1'), ('is_product_variant', '=', False)] }"
                 />
             </label>
             <field name="weight" position="after">
@@ -60,7 +60,7 @@
                 <label
                     for="product_volume"
                     string="Volume"
-                    attrs="{'invisible': [('product_variant_count', '&gt;', '1'), ('is_product_variant', '=', True)] }"
+                    attrs="{'invisible': [('product_variant_count', '&gt;', '1'), ('is_product_variant', '=', False)] }"
                 />
             </label>
             <field name="volume" position="after">
