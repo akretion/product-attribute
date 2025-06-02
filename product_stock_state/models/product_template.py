@@ -19,7 +19,8 @@ class ProductTemplate(models.Model):
         " 'In Stock' to 'In Limited Stock' State. If not set, Odoo will"
         " use the value defined in the product category. If"
         " no value is defined in product category, it will use the value"
-        " defined for the company",
+        " defined for the company. If on_demand is checked, stock state will pass to"
+        " 'On Demand' regardless stock state threshold and stock quantity",
         digits="Stock Threshold",
     )
 
