@@ -47,6 +47,7 @@ msgid "Date Start"
 msgstr "Data d'inici"
 
 #. module: product_supplierinfo_revision
+#: model:ir.model.fields,field_description:product_supplierinfo_revision.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:product_supplierinfo_revision.field_product_supplierinfo_duplicate_wizard__display_name
 msgid "Display Name"
 msgstr "Nom visible"
@@ -57,11 +58,13 @@ msgid "Duplicate Supplier Info"
 msgstr "Informació del proveïdor duplicada"
 
 #. module: product_supplierinfo_revision
+#: model:ir.model.fields,field_description:product_supplierinfo_revision.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:product_supplierinfo_revision.field_product_supplierinfo_duplicate_wizard__id
 msgid "ID"
 msgstr "ID"
 
 #. module: product_supplierinfo_revision
+#: model:ir.model.fields,field_description:product_supplierinfo_revision.field_product_supplierinfo____last_update
 #: model:ir.model.fields,field_description:product_supplierinfo_revision.field_product_supplierinfo_duplicate_wizard____last_update
 msgid "Last Modified on"
 msgstr "Darrera modificació el"
@@ -133,7 +136,5 @@ msgstr "El preu per comprar un producte"
 msgid "Variation %"
 msgstr "Variació %"
 
-#. module: product_supplierinfo_revision
-#: model_terms:ir.ui.view,arch_db:product_supplierinfo_revision.supplierinfo_duplicate_wizard_view
-msgid "or"
-msgstr "o"
+#~ msgid "or"
+#~ msgstr "o"

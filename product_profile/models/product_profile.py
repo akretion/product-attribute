@@ -95,6 +95,11 @@ class ProductProfile(models.Model):
 
     def _refresh_products_vals(self):
         """Reapply profile values on products"""
+        fnames = [
+            fname
+            for fname in self.env["product.product"]._get_profile_fields()
+            if not fname.startswith(PROF_DEFAULT_STR)
+        ]
         for rec in self:
             products = self.env["product.product"].search([("profile_id", "=", rec.id)])
             if products:
@@ -102,10 +107,21 @@ class ProductProfile(models.Model):
                     " >>> %s Products updating after updated '%s' pro"
                     "duct profile" % (len(products), rec.name)
                 )
-                data = products._get_vals_from_profile(
-                    {"profile_id": rec.id}, ignore_defaults=True
-                )
-                products.write(data)
+                for product in products:
+                    # Only write field that have changed to avoid
+                    # useless trigger of computed fields
+                    vals = {}
+                    for fname in fnames:
+                        if product[fname] != rec[fname]:
+                            vals.update(
+                                {
+                                    fname: product._fields[fname].convert_to_write(
+                                        rec[fname], product
+                                    )
+                                }
+                            )
+                    if vals:
+                        product.write(vals)
 
     @api.model
     def check_useless_key_in_vals(self, vals, key):
@@ -132,7 +148,7 @@ class ProductProfile(models.Model):
     def fields_view_get(
         self, view_id=None, view_type="form", toolbar=False, submenu=False
     ):
-        """ Display a warning for end user if edit record """
+        """Display a warning for end user if edit record"""
         res = super().fields_view_get(
             view_id=view_id,
             view_type=view_type,
@@ -196,7 +212,7 @@ class ProductMixinProfile(models.AbstractModel):
 
     @api.onchange("profile_id")
     def _onchange_from_profile(self):
-        """ Update product fields with product.profile corresponding fields """
+        """Update product fields with product.profile corresponding fields"""
         self.ensure_one()
         if self.profile_id:
             ignore_defaults = True if self._origin.profile_id else False
@@ -210,11 +226,12 @@ class ProductMixinProfile(models.AbstractModel):
                 except Exception as e:
                     raise UserError(format_except_message(e, field, self))
 
-    @api.model
-    def create(self, vals):
-        if vals.get("profile_id"):
-            vals.update(self._get_vals_from_profile(vals, ignore_defaults=False))
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get("profile_id"):
+                vals.update(self._get_vals_from_profile(vals, ignore_defaults=False))
+        return super().create(vals_list)
 
     def write(self, vals):
         profile_changed = vals.get("profile_id")
@@ -231,7 +248,7 @@ class ProductMixinProfile(models.AbstractModel):
 
     @api.model
     def _get_default_profile_fields(self):
-        " Get profile fields with prefix PROF_DEFAULT_STR "
+        "Get profile fields with prefix PROF_DEFAULT_STR"
         return [
             x
             for x in self.env["product.profile"]._fields.keys()
@@ -239,7 +256,7 @@ class ProductMixinProfile(models.AbstractModel):
         ]
 
     @api.model
-    def _customize_view(self, res, view_type):
+    def _customize_view(self, res, view_type, profile_domain=None):
         profile_group = self.env.ref("product_profile.group_product_profile_user")
         users_in_profile_group = [user.id for user in profile_group.users]
         default_fields = self._get_default_profile_fields()
@@ -262,7 +279,7 @@ class ProductMixinProfile(models.AbstractModel):
             res["arch"] = etree.tostring(doc, pretty_print=True)
         elif view_type == "search":
             # Allow to dynamically create search filters for each profile
-            filters_to_create = self._get_profiles_to_filter()
+            filters_to_create = self._get_profiles_to_filter(profile_domain)
             doc = etree.XML(res["arch"])
             node = doc.xpath("//filter[1]")
             if node:
@@ -271,17 +288,21 @@ class ProductMixinProfile(models.AbstractModel):
                         "filter", **self._customize_profile_filters(my_filter)
                     )
                     node[0].addprevious(elm)
+                node[0].addprevious(etree.Element("separator"))
                 res["arch"] = etree.tostring(doc, pretty_print=True)
         return res
 
-    @api.model
-    def _get_profiles_to_filter(self):
-        """ Inherit if you want that some profiles doesn't have a filter """
-        return [(x.id, x.name) for x in self.env["product.profile"].search([])]
+    def _get_profiles_to_filter(self, profile_domain=None):
+        """Inherit if you want that some profiles doesn't have a filter"""
+        if profile_domain is None:
+            profile_domain = []
+        return [
+            (x.id, x.name) for x in self.env["product.profile"].search(profile_domain)
+        ]
 
     @api.model
     def _customize_profile_filters(self, my_filter):
-        """ Inherit if you to customize search filter display"""
+        """Inherit if you to customize search filter display"""
         return {
             "string": "%s" % my_filter[1],
             "help": "Filtering by Product Profile",

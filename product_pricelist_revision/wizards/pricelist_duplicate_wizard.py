@@ -10,8 +10,8 @@ class ProductPricelistItemDuplicateWizard(models.TransientModel):
     _name = "product.pricelist.item.duplicate.wizard"
     _description = "Wizard Product Pricelist Item Duplicate"
 
-    date_start = fields.Date(required=True)
-    date_end = fields.Date()
+    date_start = fields.Datetime(required=True)
+    date_end = fields.Datetime()
     variation_percent = fields.Float(digits="Product Price", string="Variation %")
 
     def action_apply(self):
@@ -27,11 +27,10 @@ class ProductPricelistItemDuplicateWizard(models.TransientModel):
                     * (1.0 + self.variation_percent / 100.0),
                 }
             )
-            item.date_end = self.date_start - relativedelta(days=1)
+            item.date_end = self.date_start - relativedelta(seconds=1)
 
-        action = self.env.ref(
-            "product_pricelist_revision.product_pricelist_item_action"
-        ).read()[0]
+        xmlid = "product_pricelist_revision.product_pricelist_item_action"
+        action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
         if len(new_items) > 0:
             action["domain"] = [("id", "in", new_items.ids)]
         else:

@@ -1,3 +1,4 @@
+# Copyright (C) 2023 Cetmix OÜ
 # Copyright 2020 ForgeFlow S.L.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -12,6 +13,7 @@ class ProductTemplate(models.Model):
         string="Entry Sequence",
         help="This field contains the information related to the numbering of lots.",
         copy=False,
+        default=lambda self: self.env.company.lot_sequence_id,
     )
     lot_sequence_prefix = fields.Char(
         string="Sequence Prefix",
@@ -31,7 +33,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _create_lot_sequence(self, vals):
-        """ Create new no_gap entry sequence"""
+        """Create new no_gap entry sequence"""
         name = vals.get("name", False) or self.name
         prefix = vals.get("lot_sequence_prefix", False) or self.lot_sequence_prefix
         padding = vals.get("lot_sequence_padding") or self.lot_sequence_padding
@@ -78,11 +80,14 @@ class ProductTemplate(models.Model):
         for template in self:
             tracking = vals.get("tracking", False) or template.tracking
             if tracking in ["lot", "serial"]:
-                if not vals.get("lot_sequence_id", False):
+                if (
+                    not vals.get("lot_sequence_id", False)
+                    and not template.lot_sequence_id
+                ):
                     vals["lot_sequence_id"] = (
                         template.sudo()._create_lot_sequence(vals).id
                     )
-                else:
+                elif vals.get("lot_sequence_id", False):
                     lot_sequence_id = self.env["ir.sequence"].browse(
                         vals["lot_sequence_id"]
                     )

@@ -21,6 +21,18 @@ msgstr ""
 "%100==4 ? 2 : 3);\n"
 
 #. module: product_supplierinfo_for_customer
+#: model_terms:ir.ui.view,arch_db:product_supplierinfo_for_customer.product_pricelist_item_form_view
+msgid ""
+"<span attrs=\"{'invisible':[('base', '!=', 'partner')]}\">Partner prices -  "
+"</span>"
+msgstr ""
+
+#. module: product_supplierinfo_for_customer
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_customerinfo__active
+msgid "Active"
+msgstr ""
+
+#. module: product_supplierinfo_for_customer
 #: model:ir.model.fields,help:product_supplierinfo_for_customer.field_product_customerinfo__sequence
 msgid "Assigns the priority to the list of product vendor."
 msgstr ""
@@ -65,7 +77,6 @@ msgid "Currency"
 msgstr ""
 
 #. module: product_supplierinfo_for_customer
-#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_customerinfo__name
 #: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_product__customer_ids
 #: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_template__customer_ids
 #: model_terms:ir.ui.view,arch_db:product_supplierinfo_for_customer.product_customerinfo_form_view
@@ -117,6 +128,11 @@ msgstr ""
 
 #. module: product_supplierinfo_for_customer
 #: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_customerinfo__display_name
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_product__display_name
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_supplierinfo__display_name
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_template__display_name
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_res_partner__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -132,6 +148,11 @@ msgstr ""
 
 #. module: product_supplierinfo_for_customer
 #: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_customerinfo__id
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_product__id
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_supplierinfo__id
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_template__id
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_res_partner__id
 msgid "ID"
 msgstr ""
 
@@ -149,6 +170,11 @@ msgstr ""
 
 #. module: product_supplierinfo_for_customer
 #: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_customerinfo____last_update
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_pricelist_item____last_update
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_product____last_update
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_supplierinfo____last_update
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_template____last_update
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_res_partner____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -181,6 +207,7 @@ msgid "Other Information"
 msgstr ""
 
 #. module: product_supplierinfo_for_customer
+#: model:ir.model.fields.selection,name:product_supplierinfo_for_customer.selection__product_pricelist_assortment_item__base__partner
 #: model:ir.model.fields.selection,name:product_supplierinfo_for_customer.selection__product_pricelist_item__base__partner
 msgid "Partner Prices on the product form"
 msgstr ""
@@ -309,6 +336,11 @@ msgstr ""
 #, fuzzy
 msgid "Variant Customer"
 msgstr "Kupec"
+
+#. module: product_supplierinfo_for_customer
+#: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_customerinfo__name
+msgid "Vendor"
+msgstr ""
 
 #. module: product_supplierinfo_for_customer
 #: model:ir.model.fields,field_description:product_supplierinfo_for_customer.field_product_customerinfo__product_code

@@ -26,6 +26,7 @@ class ProductTemplate(models.Model):
         default=lambda self: self._get_default_product_state().id,
         index=True,
         tracking=10,
+        copy=False,
     )
 
     def _inverse_product_state_id(self):
@@ -51,7 +52,7 @@ class ProductTemplate(models.Model):
     # product.template or product.product
     @api.model
     def _set_product_state_id(self, record):
-        """ The record param is for similar state field at product.product model. """
+        """The record param is for similar state field at product.product model."""
         ProductState = record.env["product.state"]
         product_state = ProductState.search([("code", "=", record.state)], limit=1)
         if record.state and not product_state:
